@@ -12,6 +12,12 @@ var actions = {
     req.on('end',function(){
       //data === "url=something"
       var url = getQuery(data,"url");
+      archive.addUrlToList(url, function(){
+        res.writeHead(302,
+          {Location: archive.archivedSites + '/' +url}
+        );
+        res.end();
+      });
     });
   },
   GET: function (req, res) {
@@ -54,6 +60,7 @@ var loadContent = function(url, res) {
     if(exists){
       httpHelpers.sendContent(res, archive.paths.archivedSites + '/' + url, 200);
     }else{
+      //download url
       httpHelpers.sendContent(res, archive.paths.siteAssets + '/loading.html', 404);
     }
   });

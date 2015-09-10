@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-
+var httpHelpers = require('../web/http-helpers');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -37,14 +37,25 @@ exports.isUrlInList = function(url, callback) {
   });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(url, callback) {
+  exports.isUrlInList(url, function(exists){
+    if(!exists) {
+      fs.appendFile(exports.paths.list, url+"\n", function(err){
+        if(err) throw err;
+        callback();
+      });
+    }
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
-  fs.readdir(exports.paths.archivedSites, function(files){
+  fs.readdir(exports.paths.archivedSites, function(err, files){
     callback(_.contains(files,url));
   });
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(urlArr) {
+    _.each(urlArr, function(url) {
+      httpHelpers.getContent(url);
+    });
 };
