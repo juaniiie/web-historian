@@ -10,11 +10,10 @@ var actions = {
       data += chunk;
     });
     req.on('end',function(){
-      //data === "url=something"
       var url = getQuery(data,"url");
       archive.addUrlToList(url, function(){
         res.writeHead(302,
-          {Location: archive.archivedSites + '/' +url}
+          {Location: url}
         );
         res.end();
       });
@@ -60,17 +59,8 @@ var loadContent = function(url, res) {
     if(exists){
       httpHelpers.sendContent(res, archive.paths.archivedSites + '/' + url, 200);
     }else{
-      //download url
       httpHelpers.sendContent(res, archive.paths.siteAssets + '/loading.html', 404);
     }
   });
-
-
-  //if isUrlInList
-    //respond with content
-  //else 
-    //respond with loading html
-    //download content
-    //add to list and folder
   
 }

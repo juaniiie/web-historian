@@ -26,14 +26,11 @@ exports.sendContent = function(res, asset, statusCode) {
 };
 
 exports.getContent = function(url) {
-  //get html from url
   httpReq.get(url, function (err, res) {
     if (err) {
       console.error(err);
       return;
     }
-    //make file with url name
-    //write html in file
     fs.writeFile(archive.paths.archivedSites +'/'+ url, res.buffer.toString(), function (err) {
       if (err) throw err;
     });
